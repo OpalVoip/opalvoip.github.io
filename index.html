@@ -2,10 +2,320 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>OPAL VoIP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="OPAL is the Open Phone Abstraction Library: open source C++ for SIP, H.323, and real-time voice and video. Source is on GitHub, together with PTLib.">
+  <meta name="color-scheme" content="dark">
+  <title>OPAL — Open Phone Abstraction Library</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2314110e'/%3E%3Cpath d='M8 22V10h4.2c2.7 0 4.3 1.4 4.3 3.6 0 1.5-.8 2.7-2.1 3.2L18.6 22h-3.2l-3.6-4.8H11V22H8zm3-7.2h1.1c1.2 0 1.9-.6 1.9-1.5s-.7-1.5-1.9-1.5H11v3z' fill='%23f3efe4'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,520;9..144,640&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #14110e;
+      --raise: #1e1a16;
+      --ink: #f3efe4;
+      --muted: #c4bbaa;
+      --faint: #8f8678;
+      --line: rgba(243, 239, 228, 0.14);
+      --copper: #e08a45;
+      --copper-deep: #b8652c;
+      --code: #241f1a;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(900px 420px at 90% -10%, rgba(224, 138, 69, 0.16), transparent 60%),
+        var(--bg);
+      color: var(--ink);
+      font-family: Outfit, "Avenir Next", "Segoe UI", sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.55;
+    }
+
+    a { color: inherit; }
+
+    a:hover { color: var(--copper); }
+
+    a:focus-visible {
+      outline: 2px solid var(--copper);
+      outline-offset: 3px;
+    }
+
+    .wrap {
+      width: min(1080px, calc(100% - 2.5rem));
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding: 1.25rem 0 0.5rem;
+    }
+
+    .brand {
+      font-family: Fraunces, "Iowan Old Style", Palatino, serif;
+      font-weight: 640;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.1rem 1.4rem;
+      font-size: 0.95rem;
+    }
+
+    nav a { text-decoration: none; }
+
+    .hero {
+      padding: 4.5rem 0 3rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin: 0 0 0.8rem;
+      color: var(--copper);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 14ch;
+      font-family: Fraunces, "Iowan Old Style", Palatino, serif;
+      font-size: clamp(3rem, 7vw, 5.4rem);
+      font-weight: 520;
+      letter-spacing: -0.03em;
+      line-height: 0.95;
+    }
+
+    .lede {
+      max-width: 42rem;
+      margin: 1.5rem 0 0;
+      color: var(--muted);
+      font-size: 1.2rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 2rem;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 0.7rem 1.05rem;
+      border: 1px solid var(--copper-deep);
+      border-radius: 999px;
+      background: var(--copper);
+      color: #1a120c;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .button:hover { color: #1a120c; background: #f0a15f; }
+
+    .button.quiet {
+      background: transparent;
+      color: var(--ink);
+      border-color: var(--line);
+    }
+
+    .button.quiet:hover { color: var(--copper); border-color: var(--copper); }
+
+    section { padding: 3.5rem 0; }
+
+    h2 {
+      margin: 0 0 0.4rem;
+      font-family: Fraunces, "Iowan Old Style", Palatino, serif;
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 520;
+      letter-spacing: -0.02em;
+    }
+
+    .section-intro {
+      max-width: 40rem;
+      margin: 0 0 1.8rem;
+      color: var(--muted);
+    }
+
+    .repos {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .repo {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      padding: 1.4rem 1.4rem 1.2rem;
+      background: var(--raise);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+
+    .repo h3 {
+      margin: 0;
+      font-family: Fraunces, "Iowan Old Style", Palatino, serif;
+      font-size: 1.7rem;
+      font-weight: 520;
+    }
+
+    .repo p { margin: 0; color: var(--muted); }
+
+    .repo a.loc {
+      margin-top: auto;
+      color: var(--copper);
+      font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 0.92rem;
+      word-break: break-all;
+    }
+
+    .facts {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem 2rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .facts h3 {
+      margin: 0 0 0.35rem;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .facts p { margin: 0; color: var(--muted); }
+
+    pre {
+      margin: 0;
+      padding: 1.1rem 1.2rem;
+      overflow-x: auto;
+      background: var(--code);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .build-note {
+      margin: 1rem 0 0;
+      color: var(--muted);
+    }
+
+    footer {
+      padding: 2rem 0 3rem;
+      border-top: 1px solid var(--line);
+      color: var(--faint);
+      font-size: 0.95rem;
+    }
+
+    footer p { margin: 0.35rem 0; }
+
+    footer a { color: var(--muted); }
+
+    @media (max-width: 800px) {
+      .repos, .facts { grid-template-columns: 1fr; }
+      .hero { padding-top: 2.8rem; }
+      header { align-items: flex-start; flex-direction: column; gap: 0.8rem; }
+    }
+  </style>
 </head>
 <body>
-  <h1>OPAL VoIP</h1>
-  <p>Open Source Telephony and Video Conferencing</p>
+  <div class="wrap">
+    <header>
+      <a class="brand" href="#top">OPAL</a>
+      <nav aria-label="Page">
+        <a href="#repositories">Repositories</a>
+        <a href="#libraries">Libraries</a>
+        <a href="#source">Source</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <p class="eyebrow">OpalVoIP</p>
+        <h1>Open Phone Abstraction Library</h1>
+        <p class="lede">
+          Open source C++ for voice, video, and real-time communication.
+          OPAL presents SIP, H.323, and the media that travels with them as one call model.
+          PTLib is the portable library it is built on.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="https://github.com/OpalVoip/opal">OPAL on GitHub</a>
+          <a class="button quiet" href="https://github.com/OpalVoip/ptlib">PTLib on GitHub</a>
+        </div>
+      </section>
+
+      <section id="repositories">
+        <h2>Repositories</h2>
+        <p class="section-intro">Both libraries are in the OpalVoip organisation on GitHub. Clone PTLib first, then OPAL.</p>
+        <div class="repos">
+          <article class="repo">
+            <h3>OPAL</h3>
+            <p>Call control, signalling, RTP media, and codec plugins. Applications link this library and build it against PTLib.</p>
+            <a class="loc" href="https://github.com/OpalVoip/opal">https://github.com/OpalVoip/opal</a>
+          </article>
+          <article class="repo">
+            <h3>PTLib</h3>
+            <p>Portable Tools Library. Threading, networking, and I/O for Unix, macOS, and Windows. OPAL requires a PTLib build.</p>
+            <a class="loc" href="https://github.com/OpalVoip/ptlib">https://github.com/OpalVoip/ptlib</a>
+          </article>
+        </div>
+      </section>
+
+      <section id="libraries">
+        <h2>What the libraries cover</h2>
+        <ul class="facts">
+          <li>
+            <h3>Signalling</h3>
+            <p>SIP and H.323, including the supplementary services and NAT extensions that sit with H.323, plus SDP for session description.</p>
+          </li>
+          <li>
+            <h3>Media</h3>
+            <p>RTP and RTCP, audio and video codec plugins, mixing, and secure media when the build has SRTP.</p>
+          </li>
+          <li>
+            <h3>Platforms</h3>
+            <p>Windows through the Visual Studio projects. Linux, macOS, and other Unix systems through the makefiles in each tree.</p>
+          </li>
+        </ul>
+      </section>
+
+      <section id="source">
+        <h2>Get the source</h2>
+        <p class="section-intro">Build PTLib, then build OPAL against that PTLib. Each repository carries the build instructions for its tree.</p>
+        <pre><code>git clone https://github.com/OpalVoip/ptlib.git
+git clone https://github.com/OpalVoip/opal.git</code></pre>
+        <p class="build-note">
+          The library license is the Mozilla Public License 1.0:
+          <a href="https://github.com/OpalVoip/opal/blob/master/mpl-1.0.htm">OPAL</a>
+          and
+          <a href="https://github.com/OpalVoip/ptlib/blob/master/mpl-1.0.htm">PTLib</a>.
+          Changes to the libraries are shared under that license. An application that links them keeps its own license.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <p>OPAL and PTLib are maintained at <a href="https://github.com/OpalVoip">github.com/OpalVoip</a>.</p>
+      <p>This site is <a href="https://github.com/OpalVoip/opalvoip.github.io">github.com/OpalVoip/opalvoip.github.io</a>.</p>
+    </footer>
+  </div>
 </body>
 </html>
